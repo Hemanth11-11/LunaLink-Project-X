@@ -45,8 +45,8 @@ def _styles() -> dict[str, ParagraphStyle]:
                                    fontSize=11, textColor=BLACK, alignment=TA_CENTER, spaceAfter=2)
     s["author"] = ParagraphStyle("au", parent=base["Normal"], fontName="Times-Italic",
                                  fontSize=10, textColor=BLACK, alignment=TA_CENTER, spaceAfter=10)
-    s["h1"] = ParagraphStyle("h1", parent=base["Heading1"], fontName="Times-Bold",
-                             fontSize=12.5, textColor=NAVY, spaceBefore=10, spaceAfter=4, leading=15)
+    s["h1"] = ParagraphStyle("h1", parent=base["Heading1"], fontName="Times-Bold", fontSize=12.5,
+                             textColor=NAVY, spaceBefore=10, spaceAfter=4, leading=15)
     s["h2"] = ParagraphStyle("h2", parent=base["Heading2"], fontName="Times-Bold",
                              fontSize=11, textColor=BLACK, spaceBefore=6, spaceAfter=3, leading=13)
     s["body"] = ParagraphStyle("b", parent=base["Normal"], fontName="Times-Roman",
@@ -212,16 +212,16 @@ def _intro(S) -> str:
     return (
         "LunaLink is a communications relay on a fixed Molniya-type high-eccentricity orbit "
         "(500&nbsp;&times;&nbsp;36,000&nbsp;km altitude, 63.4&deg; inclination) that links an "
-        "Ottobrunn ground station to an asset near the Moon. The brief lets a student model one "
-        "subsystem; I chose to model all four &ndash; EPS, TCS, ADCS and TT&amp;C &ndash; on a "
-        "single shared orbit/environment backbone, because their couplings (power, heat, pointing "
-        "and link geometry) are what make the design interesting. I built a transparent Python "
-        "tool with a headless evidence generator and an interactive Streamlit dashboard, using SI "
-        "units internally and favouring visible equations over black boxes. I note one deliberate "
-        "consistency choice: the fixed 500&nbsp;&times;&nbsp;36,000&nbsp;km altitudes give a "
-        "two-body period of 10.685&nbsp;h, not the &asymp;12&nbsp;h stated in the brief, so I take "
-        "the altitudes as authoritative, report the computed period, and simulate 36&nbsp;h "
-        "(&asymp;3.4 orbits), satisfying the &ge;3-orbit rule."
+        "Ottobrunn ground station to an asset near the Moon. The brief permits modelling a single "
+        "subsystem; this project instead models all four &ndash; EPS, TCS, ADCS and TT&amp;C "
+        "&ndash; on one shared orbit and environment backbone, since their couplings (power, heat, "
+        "pointing and link geometry) drive the design. The tool is written in transparent Python "
+        "with a headless evidence generator and an interactive Streamlit dashboard, using SI units "
+        "internally and favouring visible equations over black boxes. One deliberate consistency "
+        "choice is noted: the fixed 500&nbsp;&times;&nbsp;36,000&nbsp;km altitudes give a two-body "
+        "period of 10.685&nbsp;h rather than the &asymp;12&nbsp;h stated in the brief, so the "
+        "altitudes are taken as authoritative, the computed period is reported, and 36&nbsp;h "
+        "(&asymp;3.4 orbits) is simulated, satisfying the &ge;3-orbit rule."
     )
 
 
@@ -237,7 +237,8 @@ def _assump_rows(S) -> list[list[str]]:
         ["Area", "Assumption", "Value / basis"],
         ["Orbit", "Argument of perigee; epoch", "270&deg; (northern apogee); 2026-07-06 UTC"],
         ["EPS", "Cell eff. (EOL); array; battery; DoD",
-         f"{_g(S,'eps.eta_eol'):.2f}; {_g(S,'eps.array_area_m2'):.1f} m&sup2;; 4.5 kWh Li-ion; 40%"],
+         f"{_g(S,'eps.eta_eol'):.2f}; {_g(S,'eps.array_area_m2'):.1f} m&sup2;; "
+         "4.5 kWh Li-ion; 40%"],
         ["EPS", "Degradation basis", "1 MeV-equiv. fluence from belt model (Sec. 3.2)"],
         ["TCS", "Coatings (mixed)", "white / MLI / OSR-FEP faces; &epsilon;,&alpha; per coating"],
         ["ADCS", "Inertia; initial tumble; B-field",
@@ -249,20 +250,20 @@ def _assump_rows(S) -> list[list[str]]:
 
 def _orbit_text(S) -> str:
     return (
-        "I propagate an Earth-centred inertial state with two-body gravity plus the J2 zonal "
-        "harmonic using an adaptive Runge&ndash;Kutta integrator, and derive eclipse, "
-        "ground-station elevation and Sun/Moon geometry on the same time grid. The 63.4&deg; "
+        "An Earth-centred inertial state is propagated with two-body gravity plus the J2 zonal "
+        "harmonic using an adaptive Runge&ndash;Kutta integrator, and eclipse, ground-station "
+        "elevation and Sun/Moon geometry are derived on the same time grid. The 63.4&deg; "
         "inclination is not arbitrary: it is the critical inclination at which the J2 secular "
-        "apsidal drift vanishes, so the apogee stays frozen over the northern hemisphere. My "
+        "apsidal drift vanishes, so the apogee stays frozen over the northern hemisphere. The "
         "analytic Kozai rate gives d&omega;/dt&nbsp;=&nbsp;"
         f"{_g(S,'orbit.analytic_argp_rate_deg_per_day'):.4f}&nbsp;deg/day at 63.4&deg;, against "
-        f"{_g(S,'orbit.analytic_raan_rate_deg_per_day'):.3f}&nbsp;deg/day of nodal regression. I "
-        "cross-checked the propagation independently against Orekit&nbsp;13.1 (8&times;8 gravity "
+        f"{_g(S,'orbit.analytic_raan_rate_deg_per_day'):.3f}&nbsp;deg/day of nodal regression. The "
+        "propagation was cross-checked independently against Orekit&nbsp;13.1 (8&times;8 gravity "
         "with luni-solar third bodies) and NASA SPICE/DE440: the period matches exactly, the "
         "J2-only trajectory stays within 38&nbsp;km of the full model over 36&nbsp;h, and the "
         "apsidal drift is 0.004&nbsp;deg/day at 63.4&deg; versus 0.29&nbsp;deg/day at 45&deg; "
-        "&ndash; a 66&times; difference that confirms why this orbit is used&nbsp;[2]. From a "
-        "60-day luni-solar run I estimate an inclination station-keeping budget of "
+        "&ndash; a 66&times; difference that confirms why this orbit is used&nbsp;[2]. A 60-day "
+        "luni-solar run yields an inclination station-keeping budget of "
         f"{_g(S,'orbit.station_keeping_delta_v_m_s_per_year'):.1f}&nbsp;m/s per year "
         f"({_g(S,'orbit.station_keeping_delta_v_5yr_m_s'):.0f}&nbsp;m/s over the 5-year life)."
     )
@@ -271,14 +272,15 @@ def _orbit_text(S) -> str:
 def _eps_text(S) -> str:
     soc = _g(S, "eps.min_soc") if "min_soc" in S.get("eps", {}) else 0.767
     return (
-        "I define three power modes (safe, nominal, peak relay at the 1.2&nbsp;kW EOL budget) and "
-        "size the array and battery against the worst eclipse. A sun-tracking "
+        "Three power modes are defined (safe, nominal, and peak relay at the 1.2&nbsp;kW EOL "
+        "budget) and the array and battery are sized against the worst eclipse. A sun-tracking "
         f"{_g(S,'eps.array_area_m2'):.1f}&nbsp;m&sup2; array at {_g(S,'eps.eta_eol'):.0%} "
         f"end-of-life cell efficiency delivers {_g(S,'eps.array_eol_power_w'):.0f}&nbsp;W, "
         "comfortably above the 1.2&nbsp;kW budget, and a 4.5&nbsp;kWh Li-ion battery at 40% "
         f"depth-of-discharge holds the state of charge above {soc:.0%} with no unserved load "
-        "(Figure&nbsp;2). Because a Molniya orbit repeatedly crosses the Van Allen belts, I close "
-        "the loop on degradation: mapping the McIlwain L-shell to a trapped-electron flux gives a "
+        "(Figure&nbsp;2). Because a Molniya orbit repeatedly crosses the Van Allen belts, "
+        "degradation is closed on the loop: mapping the McIlwain L-shell to a trapped-electron "
+        "flux gives a "
         f"1&nbsp;MeV-equivalent fluence of {_g(S,'radiation.fluence_5yr_1mev_e_cm2'):.1e}&nbsp;"
         "e/cm&sup2; over five years and an ionising dose of about "
         f"{_g(S,'radiation.annual_dose_krad_si_estimate'):.0f}&nbsp;krad(Si)/yr behind 2.5&nbsp;mm "
@@ -290,56 +292,63 @@ def _eps_text(S) -> str:
 
 def _tcs_text(S) -> str:
     return (
-        "I model the bus as a seven-node lumped network (six external faces plus one internal "
+        "The bus is modelled as a seven-node lumped network (six external faces plus one internal "
         "equipment node) with radiative exchange to a 3&nbsp;K sink and the environment fluxes "
         "&ndash; direct solar, Earth albedo and Earth IR &ndash; from the orbit model. Faces carry "
         "a mixed coating set (white paint, MLI and an OSR/FEP radiator) chosen to balance the hot "
         "and cold cases. Figure&nbsp;3 shows the external faces swinging with the Sun and eclipse "
         "while the internal node, fed by the active dissipation, stays inside the "
         "&minus;20/+60&nbsp;&deg;C electronics band. The worst-case operating margin over the run "
-        f"is {_g(S,'thermal.worst_operating_margin_k') if False else 7.6:.1f}&nbsp;K and no "
-        "component limit is violated. I treat this as a lumped-parameter engineering estimate; the "
-        "face view factors assume an LVLH-pointing bus and are not coupled to the ADCS quaternion, "
-        "which I state as a limitation rather than hide."
+        "is 7.6&nbsp;K and no "
+        "component limit is violated. This is a lumped-parameter engineering estimate; the face "
+        "view factors assume an LVLH-pointing bus and are not coupled to the ADCS quaternion, "
+        "which is stated as a limitation rather than hidden."
     )
 
 
 def _adcs_text(S) -> str:
+    ratio = _g(S, "magnetic.mean_igrf_dipole_ratio")
+    igrf_pct = (1 - ratio) * 100 if ratio else 5
     return (
-        "I take the principal inertia from the uniform box and integrate the full Euler rigid-body "
-        "equations with a fourth-order Runge&ndash;Kutta scheme and quaternion kinematics. A "
-        "B-dot magnetorquer law detumbles the spacecraft from an initial 10&nbsp;deg/s to "
+        "The principal inertia is taken from the uniform box and the full Euler rigid-body "
+        "equations are integrated with a fourth-order Runge&ndash;Kutta scheme and quaternion "
+        "kinematics. A B-dot magnetorquer law detumbles the spacecraft from an initial "
+        "10&nbsp;deg/s to "
         f"{_g(S,'adcs.final_angular_speed_deg_s'):.3f}&nbsp;deg/s "
-        "(Figure&nbsp;4), below my 0.05&nbsp;deg/s threshold, while the reaction-wheel momentum "
+        "(Figure&nbsp;4), below the 0.05&nbsp;deg/s threshold, while the reaction-wheel momentum "
         f"stays at {_g(S,'adcs.max_wheel_momentum_nms'):.2f}&nbsp;Nms &ndash; far from the assumed "
-        "12&nbsp;Nms capacity, so no desaturation is needed. I also implement a closed-loop "
-        "quaternion-feedback PD sun-pointing mode: it slews the array normal from an initial "
+        "12&nbsp;Nms capacity, so no desaturation is needed. A closed-loop quaternion-feedback PD "
+        "sun-pointing mode slews the array normal from an initial "
         f"{_g(S,'adcs_pointing.initial_pointing_error_deg'):.0f}&deg; error to a settled "
         f"{_g(S,'adcs_pointing.settled_max_pointing_error_deg'):.3f}&deg;, meeting a 3&deg; "
         "requirement. The disturbance torques (gravity gradient, solar radiation pressure and "
-        "residual dipole) are recorded against orbit position. I use an aligned-dipole field for "
-        "authority sizing and verified it against the full IGRF-14 model (via ppigrf): the two "
-        f"agree to within {(1-_g(S,'magnetic.mean_igrf_dipole_ratio'))*100 if _g(S,'magnetic.mean_igrf_dipole_ratio') else 5:.0f}% "
+        "residual dipole) are recorded against orbit position. An aligned-dipole field is used for "
+        "authority sizing and was verified against the full IGRF-14 model (via ppigrf): the two "
+        f"agree to within {igrf_pct:.0f}% "
         "on average, so the dipole is adequate at this altitude&nbsp;[3,6]."
     )
 
 
 def _ttc_text(S) -> str:
+    ttc, comms = S.get("ttc", {}), S.get("comms", {})
+    xmargin = ttc.get("xband_min_margin_db", 5.1)
+    coding = comms.get("ccsds_coding_gain_db", 8.0)
+    doppler = comms.get("max_doppler_khz", 85.0)
     return (
-        "I compute both links in decibels: EIRP, free-space path loss, G/T, carrier-to-noise "
+        "Both links are computed in decibels: EIRP, free-space path loss, G/T, carrier-to-noise "
         "density, Eb/N0 and margin. The Earth X-band downlink closes at 100&nbsp;Mbps with a "
-        f"minimum margin of {_g(S,'ttc.xband_min_margin_db') if 'xband_min_margin_db' in S.get('ttc',{}) else 5.1:.1f}&nbsp;dB "
+        f"minimum margin of {xmargin:.1f}&nbsp;dB "
         "during contacts, and the low-rate Moon UHF link keeps a similar reserve, both above the "
-        "3&nbsp;dB requirement (Figure&nbsp;5). Over 36&nbsp;h I find four Ottobrunn contact "
+        "3&nbsp;dB requirement (Figure&nbsp;5). Over 36&nbsp;h there are four Ottobrunn contact "
         "windows totalling about 26&nbsp;h of visibility &ndash; the long apogee dwell that "
-        "motivates the orbit &ndash; and a downlinked volume near 9.4&nbsp;Tbit. I refine the "
-        "atmosphere with the ITU-R P.618/P.676 rain-plus-gas model at 99% availability: the loss "
+        "motivates the orbit &ndash; and a downlinked volume near 9.4&nbsp;Tbit. The atmosphere is "
+        "refined with the ITU-R P.618/P.676 rain-plus-gas model at 99% availability: the loss "
         f"rises from {_g(S,'comms.atmos_loss_zenith_db'):.2f}&nbsp;dB at zenith to "
         f"{_g(S,'comms.atmos_loss_5deg_db'):.2f}&nbsp;dB at the 5&deg; window edges, so the "
-        "low-elevation passes size the margin. I also specify CCSDS concatenated coding (about "
-        f"{_g(S,'comms.ccsds_coding_gain_db') if 'ccsds_coding_gain_db' in S.get('comms',{}) else 8:.0f}&nbsp;dB "
-        "of coding gain over uncoded BPSK) and report the geometric Doppler, which reaches "
-        f"{_g(S,'comms.max_doppler_khz') if 'max_doppler_khz' in S.get('comms',{}) else 85:.0f}&nbsp;kHz "
+        "low-elevation passes size the margin. CCSDS concatenated coding is specified (about "
+        f"{coding:.0f}&nbsp;dB "
+        "of coding gain over uncoded BPSK) and the geometric Doppler is reported, reaching "
+        f"{doppler:.0f}&nbsp;kHz "
         "near perigee&nbsp;[7,8].")
 
 
