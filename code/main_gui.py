@@ -641,7 +641,6 @@ def _render_home(config, environment, summaries, validation, sample_stride) -> N
         st.dataframe(pd.DataFrame(PROJECT_SCOPE_ROWS), hide_index=True, use_container_width=True)
 
 
-@st.fragment
 def _render_orbit(config, environment, summaries, sample_stride) -> None:
     st.markdown('<div class="ll-section">3D orbit &amp; environment</div>', unsafe_allow_html=True)
     max_index = len(environment) - 1
@@ -698,7 +697,6 @@ def _render_orbit(config, environment, summaries, sample_stride) -> None:
         unsafe_allow_html=True)
 
 
-@st.fragment
 def _render_eps(output_step_s) -> None:
     st.markdown('<div class="ll-section">Electrical Power System</div>', unsafe_allow_html=True)
     controls, plots = st.columns([0.34, 0.66])
@@ -755,7 +753,6 @@ def _render_eps(output_step_s) -> None:
         unsafe_allow_html=True)
 
 
-@st.fragment
 def _render_tcs(output_step_s) -> None:
     st.markdown('<div class="ll-section">Thermal Control System</div>', unsafe_allow_html=True)
     controls, plots = st.columns([0.32, 0.68])
@@ -785,7 +782,6 @@ def _render_tcs(output_step_s) -> None:
         st.json(thermal_summary, expanded=False)
 
 
-@st.fragment
 def _render_adcs(config, output_step_s) -> None:
     st.markdown('<div class="ll-section">Attitude Determination &amp; Control</div>',
                 unsafe_allow_html=True)
@@ -860,7 +856,6 @@ def _render_adcs(config, output_step_s) -> None:
     )
 
 
-@st.fragment
 def _render_ttc(output_step_s) -> None:
     st.markdown('<div class="ll-section">Telemetry, Tracking &amp; Command</div>',
                 unsafe_allow_html=True)
@@ -928,7 +923,6 @@ def _render_ttc(output_step_s) -> None:
         unsafe_allow_html=True)
 
 
-@st.fragment
 def _render_spacecraft(summaries) -> None:
     st.markdown('<div class="ll-section">LunaLink spacecraft explorer</div>',
                 unsafe_allow_html=True)
@@ -1023,25 +1017,24 @@ def main() -> None:
     validation = _as_frame(data["validation"])
     summaries = _as_dict(data["summaries"])
 
-    tab_labels = ["🏠 Home", "🌍 Orbit & Environment", "⚡ EPS", "🌡️ TCS",
-                  "🧭 ADCS", "📡 TT&C", "🛰 Spacecraft", "✅ Evidence"]
-    home, orbit, eps, tcs, adcs, ttc, spacecraft, evidence = st.tabs(tab_labels)
-    with home:
-        _render_home(config, environment, summaries, validation, sample_stride)
-    with orbit:
-        _render_orbit(config, environment, summaries, sample_stride)
-    with eps:
-        _render_eps(output_step_s)
-    with tcs:
-        _render_tcs(output_step_s)
-    with adcs:
-        _render_adcs(config, output_step_s)
-    with ttc:
-        _render_ttc(output_step_s)
-    with spacecraft:
-        _render_spacecraft(summaries)
-    with evidence:
-        _render_evidence(config, summaries, validation)
+    # Single-page navigation: only the active section renders, so a widget in one
+    # section (e.g. the TCS coating dropdown) cannot make the others expand/scroll
+    # the way st.tabs + component iframes did.
+    labels = ["🏠 Home", "🌍 Orbit & Environment", "⚡ EPS", "🌡️ TCS",
+              "🧭 ADCS", "📡 TT&C", "🛰 Spacecraft", "✅ Evidence"]
+    page = st.segmented_control("Section", labels, default=labels[0],
+                                label_visibility="collapsed", key="ll_nav") or labels[0]
+    renderers = {
+        labels[0]: lambda: _render_home(config, environment, summaries, validation, sample_stride),
+        labels[1]: lambda: _render_orbit(config, environment, summaries, sample_stride),
+        labels[2]: lambda: _render_eps(output_step_s),
+        labels[3]: lambda: _render_tcs(output_step_s),
+        labels[4]: lambda: _render_adcs(config, output_step_s),
+        labels[5]: lambda: _render_ttc(output_step_s),
+        labels[6]: lambda: _render_spacecraft(summaries),
+        labels[7]: lambda: _render_evidence(config, summaries, validation),
+    }
+    renderers[page]()
 
 
 if __name__ == "__main__":
