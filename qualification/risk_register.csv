@@ -1,0 +1,7 @@
+id,risk,likelihood,consequence,mitigation
+RISK-001,"Users may treat preliminary results as flight-qualified.",Medium,High,"README, report, and limitations state the claim boundary."
+RISK-002,"Simplified environment may understate eclipse/contact/thermal edge cases.",Medium,Medium,"Add GMAT/Orekit comparison and higher-fidelity ephemerides."
+RISK-003,"Subsystem assumptions may drift without interface control.",Medium,Medium,"Maintain ICD and tests for required columns."
+RISK-004,"TT&C deterministic margins may miss weather or pointing losses.",Medium,Medium,"Add statistical losses and antenna pattern models."
+RISK-005,"ADCS simplified controller may not represent hardware limits.",Medium,Medium,"Add actuator selection, sensor noise, and controller validation."
+RISK-006,"Thermal lumped model may miss local hot spots.",Medium,High,"Use detailed thermal network for later design phases."

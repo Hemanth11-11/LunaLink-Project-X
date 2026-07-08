@@ -1,0 +1,8 @@
+id,assumption,impact,verification
+ASM-001,"The brief orbit is interpreted as altitude 500 x 36000 km, not a forced 12 h orbit.","The computed period is about 10.6845 h.","Validation metric fixed_altitude_orbit_period_h."
+ASM-002,"Internal units are SI unless a field explicitly states otherwise.","Reduces unit ambiguity across subsystems.","Code review and interface control document."
+ASM-003,"Sun and Moon vectors are approximate analytic engineering models.","Sufficient for early trade studies, not precision operations.","Planned GMAT/Orekit cross-correlation."
+ASM-004,"Atmosphere and magnetic field are simplified engineering approximations.","ADCS and drag trends are preliminary.","Model limitations document."
+ASM-005,"EPS points solar arrays with a simple incidence factor, not a detailed attitude-dependent array geometry.","Power trends are preliminary sizing evidence.","EPS tests and trade studies."
+ASM-006,"Thermal model is a low-order lumped node model.","Good for early sizing; not thermal qualification.","Thermal tests and limitations document."
+ASM-007,"TT&C assumes fixed antenna pointing availability when geometry and margin are satisfied.","Detailed antenna pattern, acquisition, and weather effects are not fully modeled.","TT&C tests and future link validation."

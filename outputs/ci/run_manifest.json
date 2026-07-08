@@ -1,0 +1,19 @@
+{
+  "tool": "LunaLink",
+  "mode": "quick",
+  "include_j2": true,
+  "critical_failures": false,
+  "figures": {
+    "orbit_groundtrack.png": "outputs/ci/figures/orbit_groundtrack.png",
+    "eclipse_contact_timeline.png": "outputs/ci/figures/eclipse_contact_timeline.png",
+    "eps_power_soc.png": "outputs/ci/figures/eps_power_soc.png",
+    "thermal_faces_internal.png": "outputs/ci/figures/thermal_faces_internal.png",
+    "adcs_detumble_pointing.png": "outputs/ci/figures/adcs_detumble_pointing.png",
+    "ttc_range_margin_data.png": "outputs/ci/figures/ttc_range_margin_data.png",
+    "pareto_eps_trade.png": "outputs/ci/figures/pareto_eps_trade.png"
+  },
+  "scenario_exports": {
+    "gmat": "outputs/ci/scenario_exports/LunaLink_GMAT_scenario.script",
+    "orekit": "outputs/ci/scenario_exports/LunaLink_Orekit_scenario.json"
+  }
+}

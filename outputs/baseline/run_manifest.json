@@ -1,0 +1,21 @@
+{
+  "tool": "LunaLink",
+  "mode": "baseline",
+  "include_j2": true,
+  "critical_failures": false,
+  "figures": {
+    "orbit_groundtrack.png": "/home/hemanth/Downloads/Project X/outputs/baseline/figures/orbit_groundtrack.png",
+    "eclipse_contact_timeline.png": "/home/hemanth/Downloads/Project X/outputs/baseline/figures/eclipse_contact_timeline.png",
+    "eps_power_soc.png": "/home/hemanth/Downloads/Project X/outputs/baseline/figures/eps_power_soc.png",
+    "thermal_faces_internal.png": "/home/hemanth/Downloads/Project X/outputs/baseline/figures/thermal_faces_internal.png",
+    "adcs_detumble_pointing.png": "/home/hemanth/Downloads/Project X/outputs/baseline/figures/adcs_detumble_pointing.png",
+    "ttc_range_margin_data.png": "/home/hemanth/Downloads/Project X/outputs/baseline/figures/ttc_range_margin_data.png",
+    "pareto_eps_trade.png": "/home/hemanth/Downloads/Project X/outputs/baseline/figures/pareto_eps_trade.png"
+  },
+  "scenario_exports": {
+    "gmat": "/home/hemanth/Downloads/Project X/outputs/baseline/scenario_exports/LunaLink_GMAT_scenario.script",
+    "orekit": "/home/hemanth/Downloads/Project X/outputs/baseline/scenario_exports/LunaLink_Orekit_scenario.json",
+    "external_validation_recipe": "/home/hemanth/Downloads/Project X/outputs/baseline/scenario_exports/LunaLink_external_validation_recipe.md",
+    "external_comparison_template": "/home/hemanth/Downloads/Project X/outputs/baseline/scenario_exports/LunaLink_external_comparison_template.csv"
+  }
+}

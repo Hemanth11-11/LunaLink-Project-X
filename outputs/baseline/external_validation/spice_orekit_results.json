@@ -1,0 +1,17 @@
+{
+  "spice_sun_dir_err_deg_max": 0.3691381526372275,
+  "spice_sun_dir_err_deg_mean": 0.3691306724084125,
+  "spice_moon_dir_err_deg_max": 1.7953093335087478,
+  "spice_moon_dir_err_deg_mean": 1.4742939454853967,
+  "spice_moon_distance_km": 387582.8051290929,
+  "tool_moon_distance_km": 384400.0,
+  "orekit_period_s": 38464.34325923926,
+  "tool_period_s": 38464.343259239264,
+  "orekit_apogee_alt_km": 36000.0,
+  "orekit_perigee_alt_km": 500.0000000000009,
+  "orekit_vs_tool_pos_err_km_max": 37.65563984402893,
+  "orekit_vs_tool_pos_err_km_rms": 10.019427040028239,
+  "orekit_argp_drift_deg_per_day_i63p4": 0.004369141513139911,
+  "orekit_argp_drift_deg_per_day_i45": 0.29275643743308494,
+  "orekit_available": true
+}

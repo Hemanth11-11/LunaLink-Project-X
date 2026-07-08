@@ -1,0 +1,6 @@
+nc_id,description,affected_requirement,severity,disposition,rationale,evidence
+NC-001,"Formal GMAT/Orekit numerical comparison has not been executed.",REQ-XCHK-001,major,deferred,"Scenario exports exist; independent tool execution requires external setup and review.","outputs/baseline/scenario_exports/"
+NC-002,"Moon UHF geometry uses Moon-center range and Earth occultation screening, not a lunar surface relay asset.",REQ-TTC-001,major,accepted_with_rationale,"Adequate for preliminary RF sizing; limitations documented.","qualification/model_limitations.md"
+NC-003,"Thermal model is lumped-parameter, not finite-element thermal analysis.",REQ-TCS-001,major,accepted_with_rationale,"Assignment-level preliminary thermal trends and limits are covered.","qualification/model_limitations.md"
+NC-004,"ADCS wheel momentum is preliminary bookkeeping, not closed-loop wheel sizing.",REQ-ADCS-001,major,accepted_with_rationale,"Full Euler dynamics and disturbance torques are modeled; hardware sizing remains future work.","qualification/model_limitations.md"
+NC-005,"No independent IV&V or authority acceptance has been performed.",ALL,critical,deferred,"Cannot be completed by the development agent; requires independent organization/authority.","qualification/release_readiness_checklist.md"

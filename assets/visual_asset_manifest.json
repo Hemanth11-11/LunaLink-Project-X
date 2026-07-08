@@ -1,0 +1,6 @@
+{
+  "asset": "assets/lunalink_spacecraft_model.stl",
+  "description": "Project X LunaLink concept model: gold bus, deployable solar panels, radiator, high-gain dish, and low-gain UHF antennas.",
+  "units": "meters",
+  "triangle_count": 1056
+}

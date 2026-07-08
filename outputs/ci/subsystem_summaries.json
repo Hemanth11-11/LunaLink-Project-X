@@ -1,0 +1,182 @@
+{
+  "eps": {
+    "sample_count": 217,
+    "duration_s": 129600.0,
+    "array_area_m2": 6.0,
+    "eta_eol": 0.27,
+    "array_pointing_mode": "sun_tracking",
+    "array_eol_power_w": 1927.0126800000003,
+    "battery_capacity_kwh": 4.5,
+    "battery_capacity_j": 16200000.0,
+    "initial_soc": 0.8,
+    "final_soc": 1.0,
+    "min_soc": 0.7672067901234568,
+    "max_soc": 1.0,
+    "max_depth_of_discharge": 0.23279320987654317,
+    "battery_energy_swing_kwh": 1.0475694444444446,
+    "total_generated_energy_j": 242225493.8760001,
+    "total_load_energy_j": 142680000.0,
+    "net_energy_j": 99545493.8760001,
+    "average_generation_w": 1869.0238725000008,
+    "average_load_w": 1100.9259259259259,
+    "peak_generated_power_w": 1927.0126800000003,
+    "peak_load_w": 1200.0,
+    "minimum_array_incidence_factor": 0.0,
+    "average_array_incidence_factor": 0.9699074074074074,
+    "min_power_margin_w": -1200.0,
+    "eclipse_duration_s": 4200.0,
+    "sunlight_duration_s": 125400.0,
+    "ground_contact_duration_s": 94200.0,
+    "peak_load_duration_s": 100200.0,
+    "curtailed_energy_j": 90219914.24343987,
+    "unserved_energy_j": 0.0
+  },
+  "thermal": {
+    "coating": "mixed",
+    "face_coatings": {
+      "x_pos": "white",
+      "x_neg": "MLI",
+      "y_pos": "white",
+      "y_neg": "MLI",
+      "z_pos": "MLI",
+      "z_neg": "OSR/FEP"
+    },
+    "power_w": 1101.3824884792627,
+    "average_power_w": 1101.3824884792627,
+    "peak_power_w": 1200.0,
+    "duration_s": 129600.0,
+    "min_temp_k": 253.75326794014774,
+    "max_temp_k": 341.6291848893502,
+    "final_internal_temp_k": 314.361403893979,
+    "min_internal_temp_k": 293.008836947858,
+    "max_internal_temp_k": 322.6282448901366,
+    "component_limit_flags": {
+      "internal_cold": false,
+      "internal_hot": false,
+      "external_cold": false,
+      "external_hot": false
+    },
+    "component_limit_flag": false
+  },
+  "adcs": {
+    "initial_angular_speed_deg_s": 10.0,
+    "final_angular_speed_deg_s": 0.03559388768946665,
+    "max_commanded_dipole_a_m2": 400.00000000000006,
+    "max_wheel_momentum_nms": 0.16268453281495576,
+    "wheel_saturated": false,
+    "desaturation_events": 0.0,
+    "wheel_momentum_capacity_nms": 12.0,
+    "magnetorquer_max_dipole_a_m2": 400.0,
+    "max_total_torque_nm": 0.0051643424405617405,
+    "max_disturbance_torque_nm": 0.00013217306890546664,
+    "max_q_norm_error": 2.220446049250313e-16,
+    "wheel_model_scope": "preliminary disturbance momentum bookkeeping, not closed-loop sizing"
+  },
+  "ttc": {
+    "xband_contact_windows": [
+      {
+        "start_s": 1800.0,
+        "end_s": 37200.0,
+        "duration_s": 35400.0
+      },
+      {
+        "start_s": 49800.0,
+        "end_s": 67800.0,
+        "duration_s": 18000.0
+      },
+      {
+        "start_s": 79200.0,
+        "end_s": 114600.0,
+        "duration_s": 35400.0
+      },
+      {
+        "start_s": 124200.0,
+        "end_s": 129600.0,
+        "duration_s": 5400.0
+      }
+    ],
+    "xband_available_windows": [
+      {
+        "start_s": 1800.0,
+        "end_s": 37200.0,
+        "duration_s": 35400.0
+      },
+      {
+        "start_s": 49800.0,
+        "end_s": 67800.0,
+        "duration_s": 18000.0
+      },
+      {
+        "start_s": 79200.0,
+        "end_s": 114600.0,
+        "duration_s": 35400.0
+      },
+      {
+        "start_s": 124200.0,
+        "end_s": 129600.0,
+        "duration_s": 5400.0
+      }
+    ],
+    "xband_contact_duration_s": 94200.0,
+    "xband_available_duration_s": 94200.0,
+    "xband_data_volume_bits": 9420000000000.0,
+    "xband_min_margin_db": 5.12768736134484,
+    "xband_max_margin_db": 17.925844017842678,
+    "xband_data_rate_bps": 100000000.0,
+    "uhf_visibility_windows": [
+      {
+        "start_s": 0.0,
+        "end_s": 36000.0,
+        "duration_s": 36000.0
+      },
+      {
+        "start_s": 39000.0,
+        "end_s": 75000.0,
+        "duration_s": 36000.0
+      },
+      {
+        "start_s": 77400.0,
+        "end_s": 114000.0,
+        "duration_s": 36600.0
+      },
+      {
+        "start_s": 116400.0,
+        "end_s": 129600.0,
+        "duration_s": 13200.0
+      }
+    ],
+    "uhf_available_windows": [
+      {
+        "start_s": 0.0,
+        "end_s": 36000.0,
+        "duration_s": 36000.0
+      },
+      {
+        "start_s": 39000.0,
+        "end_s": 75000.0,
+        "duration_s": 36000.0
+      },
+      {
+        "start_s": 77400.0,
+        "end_s": 114000.0,
+        "duration_s": 36600.0
+      },
+      {
+        "start_s": 116400.0,
+        "end_s": 129600.0,
+        "duration_s": 13200.0
+      }
+    ],
+    "uhf_visibility_duration_s": 121800.0,
+    "uhf_available_duration_s": 121800.0,
+    "uhf_data_volume_bits": 1218000000.0,
+    "uhf_min_margin_db": 5.493496500738104,
+    "uhf_max_margin_db": 6.3554457299244405,
+    "uhf_data_rate_bps": 10000.0,
+    "aggregate_independent_link_volume_bits": 9421218000000.0,
+    "end_to_end_relay_volume_bits": 1218000000.0,
+    "total_data_volume_bits": 9421218000000.0,
+    "data_volume_note": "Total is aggregate independent link volume; end-to-end relay is min(UHF, X-band).",
+    "uhf_geometry_model": "Moon-center range with Earth occultation screening only."
+  }
+}

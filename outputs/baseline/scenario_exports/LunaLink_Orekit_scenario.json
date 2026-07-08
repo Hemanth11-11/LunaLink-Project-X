@@ -1,0 +1,41 @@
+{
+  "name": "LunaLink",
+  "note": "Orekit-style JSON scenario seed; validate independently before use.",
+  "epoch_utc": "2026-07-06T00:00:00Z",
+  "orbit_frame": "EME2000",
+  "central_body": "Earth",
+  "keplerian": {
+    "semi_major_axis_m": 24628137.0,
+    "eccentricity": 0.7207203695512981,
+    "inclination_deg": 63.4,
+    "raan_deg": 0.0,
+    "argument_of_perigee_deg": 270.0,
+    "true_anomaly_deg": 0.0
+  },
+  "spacecraft": {
+    "mass_kg": 500.0,
+    "dimensions_m": [
+      2.0,
+      1.5,
+      1.0
+    ]
+  },
+  "ground_station": {
+    "name": "Ottobrunn",
+    "latitude_deg": 48.07,
+    "longitude_deg": 11.65,
+    "altitude_m": 0.0,
+    "min_elevation_deg": 5.0
+  },
+  "validation_recipe": {
+    "duration_s": 129600.0,
+    "output_step_s": 60.0,
+    "force_model": "Earth point mass plus J2 for first-order correlation",
+    "earth_shape": "WGS84 station geometry; match tool defaults explicitly",
+    "events": [
+      "ground elevation crossing",
+      "eclipse entry/exit"
+    ],
+    "comparison_template": "LunaLink_external_comparison_template.csv"
+  }
+}

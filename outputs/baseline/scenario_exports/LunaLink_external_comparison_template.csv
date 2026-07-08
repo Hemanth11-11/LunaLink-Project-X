@@ -1,0 +1,8 @@
+item,lunalink_value,external_tool,external_value,tolerance,units,status,reviewer_notes
+orbit_period,,,,60,s,pending,
+minimum_altitude,,,,25,km,pending,
+maximum_altitude,,,,25,km,pending,
+first_contact_start,,,,600,s,pending,
+first_contact_end,,,,600,s,pending,
+first_eclipse_entry,,,,600,s,pending,
+first_eclipse_exit,,,,600,s,pending,

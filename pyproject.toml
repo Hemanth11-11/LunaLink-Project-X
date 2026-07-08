@@ -1,0 +1,19 @@
+[project]
+name = "lunalink"
+version = "0.1.0"
+requires-python = ">=3.13"
+
+[tool.pytest.ini_options]
+pythonpath = ["code"]
+testpaths = ["code/tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+# Reference cross-check scripts need external tools (spiceypy, orekit, a JVM) and
+# use sys.path/conditional imports; they are not part of the clean-install package.
+extend-exclude = ["code/external_validation"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = []

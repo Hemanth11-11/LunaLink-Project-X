@@ -1,0 +1,27 @@
+% LunaLink GMAT-style scenario export
+% This is an interchange starting point, not a validated GMAT truth run.
+Create Spacecraft LunaLink;
+LunaLink.DateFormat = UTCGregorian;
+LunaLink.Epoch = '2026-07-06T00:00:00Z';
+LunaLink.CoordinateSystem = EarthMJ2000Eq;
+LunaLink.DisplayStateType = Keplerian;
+LunaLink.SMA = 24628.137000;
+LunaLink.ECC = 0.720720369551;
+LunaLink.INC = 63.400000;
+LunaLink.RAAN = 0.000000;
+LunaLink.AOP = 270.000000;
+LunaLink.TA = 0.000000;
+LunaLink.DryMass = 500.000;
+
+Create GroundStation Ottobrunn;
+Ottobrunn.Location1 = 48.07000000;
+Ottobrunn.Location2 = 11.65000000;
+Ottobrunn.Location3 = 0.000000;
+% Minimum elevation deg: 5.000
+
+% Recommended validation products to add in GMAT:
+% - Propagate for 36 h with Earth point-mass + J2.
+% - Use EarthMJ2000Eq/EME2000-like inertial output.
+% - Report elapsed time, position, velocity, altitude, and station elevation.
+% - Add eclipse/umbra and line-of-sight access events if available.
+% - Compare event times against the companion CSV tolerances.

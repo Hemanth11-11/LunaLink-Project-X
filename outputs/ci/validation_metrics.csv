@@ -1,0 +1,18 @@
+name,value,criterion,status,severity,source_module
+fixed_altitude_orbit_period_h,10.684539794233128,"Expected about 10.6845 h for 500 x 36,000 km orbit",pass,critical,orbit
+simulation_duration_h,36.0,Must be at least 36 h,pass,critical,environment
+minimum_altitude_km,500.0000000000009,Should remain near the 500 km perigee altitude,pass,major,orbit
+maximum_altitude_km,36229.20190267842,"Should remain near the 36,000 km apogee altitude with J2 tolerance",pass,major,orbit
+minimum_contact_elevation_rad,0.08846763733282152,All contacts must be above configured minimum elevation,pass,critical,environment
+eclipse_samples,7,Eclipse count is scenario-dependent; value is recorded for evidence,pass,minor,environment
+eps_minimum_state_of_charge,0.7672067901234568,Preliminary EPS reserve should stay at or above 20% SOC,pass,major,eps
+eps_unserved_energy_j,0.0,No unserved load energy in the baseline run,pass,critical,eps
+eps_array_eol_power_w,1927.0126800000003,Solar array EOL power should meet or exceed the 1.2 kW brief value,pass,critical,eps
+eps_peak_load_w,1200.0,Peak modeled load should not exceed the 1.2 kW EOL power budget,pass,critical,eps
+eps_average_load_w,1100.9259259259259,Average modeled load should stay below the 1.2 kW EOL power budget,pass,critical,eps
+thermal_component_limit_flag,False,No thermal component limit flags in the baseline run,pass,critical,thermal
+adcs_final_angular_speed_deg_s,0.03559388768946665,Detumble demonstration should end below 0.05 deg/s,pass,major,adcs
+adcs_wheel_saturated,False,Reaction wheel storage should not saturate in the baseline run,pass,critical,adcs
+ttc_xband_min_margin_db,5.12768736134484,X-band link margin should exceed the 3 dB threshold,pass,critical,ttc
+ttc_uhf_min_margin_db,5.493496500738104,UHF link margin should exceed the 3 dB threshold,pass,critical,ttc
+ttc_xband_data_rate_bps,100000000.0,Earth downlink should meet at least 100 Mbps when available,pass,critical,ttc

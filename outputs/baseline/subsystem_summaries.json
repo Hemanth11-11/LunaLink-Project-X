@@ -1,0 +1,263 @@
+{
+  "eps": {
+    "sample_count": 2161,
+    "duration_s": 129600.0,
+    "array_area_m2": 6.0,
+    "eta_eol": 0.27,
+    "array_pointing_mode": "sun_tracking",
+    "array_eol_power_w": 1927.0126800000003,
+    "battery_capacity_kwh": 4.5,
+    "battery_capacity_j": 16200000.0,
+    "initial_soc": 0.8,
+    "final_soc": 1.0,
+    "min_soc": 0.7538966049382716,
+    "max_soc": 1.0,
+    "max_depth_of_discharge": 0.2461033950617284,
+    "battery_energy_swing_kwh": 1.1074652777777778,
+    "total_generated_energy_j": 241705200.45240006,
+    "total_load_energy_j": 142350000.0,
+    "net_energy_j": 99355200.45240006,
+    "average_generation_w": 1865.0092627500005,
+    "average_load_w": 1098.3796296296296,
+    "peak_generated_power_w": 1927.0126800000003,
+    "peak_load_w": 1200.0,
+    "minimum_array_incidence_factor": 0.0,
+    "average_array_incidence_factor": 0.9678240740740741,
+    "min_power_margin_w": -1200.0,
+    "eclipse_duration_s": 4200.0,
+    "sunlight_duration_s": 125400.0,
+    "ground_contact_duration_s": 94020.0,
+    "peak_load_duration_s": 99420.0,
+    "curtailed_energy_j": 89916293.42525944,
+    "unserved_energy_j": 0.0
+  },
+  "thermal": {
+    "coating": "mixed",
+    "face_coatings": {
+      "x_pos": "white",
+      "x_neg": "MLI",
+      "y_pos": "white",
+      "y_neg": "MLI",
+      "z_pos": "MLI",
+      "z_neg": "OSR/FEP"
+    },
+    "attitude_assumption": "LVLH/nadir-pointing bus; not ADCS quaternion coupled",
+    "power_w": 1098.4266543267006,
+    "average_power_w": 1098.4266543267006,
+    "peak_power_w": 1200.0,
+    "duration_s": 129600.0,
+    "min_temp_k": 258.3424881860499,
+    "max_temp_k": 331.93779546391875,
+    "final_internal_temp_k": 307.3164475918832,
+    "min_internal_temp_k": 293.15,
+    "max_internal_temp_k": 315.5173610886964,
+    "min_external_temp_k": 258.3424881860499,
+    "max_external_temp_k": 331.93779546391875,
+    "internal_cold_margin_k": 30.0,
+    "internal_hot_margin_k": 7.632638911303559,
+    "external_cold_margin_k": 85.19248818604987,
+    "external_hot_margin_k": 41.21220453608123,
+    "worst_cold_margin_k": 30.0,
+    "worst_hot_margin_k": 7.632638911303559,
+    "worst_operating_margin_k": 7.632638911303559,
+    "component_limit_flags": {
+      "internal_cold": false,
+      "internal_hot": false,
+      "external_cold": false,
+      "external_hot": false
+    },
+    "component_limit_flag": false
+  },
+  "adcs": {
+    "initial_angular_speed_deg_s": 10.0,
+    "final_angular_speed_deg_s": 0.025901690354961412,
+    "max_commanded_dipole_a_m2": 400.00000000000006,
+    "max_wheel_momentum_nms": 0.1496164504357469,
+    "wheel_saturated": false,
+    "desaturation_events": 0.0,
+    "wheel_momentum_capacity_nms": 12.0,
+    "magnetorquer_max_dipole_a_m2": 400.0,
+    "max_total_torque_nm": 0.0051643424405617405,
+    "max_disturbance_torque_nm": 0.00018615991618529568,
+    "max_q_norm_error": 2.220446049250313e-16,
+    "control_mode_scope": "B-dot detumble and disturbance torque bookkeeping",
+    "pointing_validation_scope": "not included in the baseline model",
+    "wheel_model_scope": "preliminary disturbance momentum bookkeeping, not closed-loop sizing"
+  },
+  "adcs_pointing": {
+    "initial_pointing_error_deg": 67.29757715283334,
+    "final_pointing_error_deg": 0.0007436535094832051,
+    "settled_mean_pointing_error_deg": 0.0013463527261667204,
+    "settled_max_pointing_error_deg": 0.011217117519769608,
+    "pointing_requirement_met": true,
+    "max_wheel_momentum_nms": 1.1160918323792572,
+    "max_q_norm_error": 2.220446049250313e-16,
+    "settle_error_deg": 3.0
+  },
+  "ttc": {
+    "xband_contact_windows": [
+      {
+        "start_s": 1620.0,
+        "end_s": 37200.0,
+        "duration_s": 35580.0
+      },
+      {
+        "start_s": 49380.0,
+        "end_s": 67260.0,
+        "duration_s": 17880.0
+      },
+      {
+        "start_s": 79080.0,
+        "end_s": 114240.0,
+        "duration_s": 35160.0
+      },
+      {
+        "start_s": 124200.0,
+        "end_s": 129600.0,
+        "duration_s": 5400.0
+      }
+    ],
+    "xband_refined_contact_windows": [
+      {
+        "start_s": 1582.0358983334227,
+        "end_s": 37183.328808878665,
+        "duration_s": 35601.29291054524
+      },
+      {
+        "start_s": 49370.72840343094,
+        "end_s": 67230.2083484097,
+        "duration_s": 17859.479944978753
+      },
+      {
+        "start_s": 79039.82098725412,
+        "end_s": 114226.77740424513,
+        "duration_s": 35186.956416991015
+      },
+      {
+        "start_s": 124174.07043261241,
+        "end_s": 129600.0,
+        "duration_s": 5425.9295673875895
+      }
+    ],
+    "xband_available_windows": [
+      {
+        "start_s": 1620.0,
+        "end_s": 37200.0,
+        "duration_s": 35580.0
+      },
+      {
+        "start_s": 49380.0,
+        "end_s": 67260.0,
+        "duration_s": 17880.0
+      },
+      {
+        "start_s": 79080.0,
+        "end_s": 114240.0,
+        "duration_s": 35160.0
+      },
+      {
+        "start_s": 124200.0,
+        "end_s": 129600.0,
+        "duration_s": 5400.0
+      }
+    ],
+    "xband_contact_duration_s": 94020.0,
+    "xband_available_duration_s": 94020.0,
+    "xband_data_volume_bits": 9402000000000.0,
+    "xband_min_margin_db": 5.12739305815262,
+    "xband_max_margin_db": 18.171762528580246,
+    "xband_data_rate_bps": 100000000.0,
+    "uhf_visibility_windows": [
+      {
+        "start_s": 0.0,
+        "end_s": 36000.0,
+        "duration_s": 36000.0
+      },
+      {
+        "start_s": 38460.0,
+        "end_s": 74940.0,
+        "duration_s": 36480.0
+      },
+      {
+        "start_s": 77280.0,
+        "end_s": 113880.0,
+        "duration_s": 36600.0
+      },
+      {
+        "start_s": 116100.0,
+        "end_s": 129600.0,
+        "duration_s": 13500.0
+      }
+    ],
+    "uhf_available_windows": [
+      {
+        "start_s": 0.0,
+        "end_s": 36000.0,
+        "duration_s": 36000.0
+      },
+      {
+        "start_s": 38460.0,
+        "end_s": 74940.0,
+        "duration_s": 36480.0
+      },
+      {
+        "start_s": 77280.0,
+        "end_s": 113880.0,
+        "duration_s": 36600.0
+      },
+      {
+        "start_s": 116100.0,
+        "end_s": 129600.0,
+        "duration_s": 13500.0
+      }
+    ],
+    "uhf_visibility_duration_s": 122580.0,
+    "uhf_available_duration_s": 122580.0,
+    "uhf_data_volume_bits": 1225800000.0,
+    "uhf_min_margin_db": 5.4934794046042725,
+    "uhf_max_margin_db": 6.3554457299244405,
+    "uhf_data_rate_bps": 10000.0,
+    "aggregate_independent_link_volume_bits": 9403225800000.0,
+    "end_to_end_relay_volume_bits": 1225800000.0,
+    "total_data_volume_bits": 9403225800000.0,
+    "data_volume_note": "Total is aggregate independent link volume; end-to-end relay is min(UHF, X-band).",
+    "xband_window_model": "Sampled flags plus linearly interpolated 5 deg elevation crossings.",
+    "uhf_geometry_model": "Moon-center range with Earth occultation screening only."
+  },
+  "orbit": {
+    "critical_inclination_deg": 63.43494882292201,
+    "inclination_deg": 63.4,
+    "analytic_argp_rate_deg_per_day": 0.0004654701051559739,
+    "analytic_raan_rate_deg_per_day": -0.17076456603372533,
+    "station_keeping_delta_v_m_s_per_year": 3.6351542783468243,
+    "station_keeping_delta_v_5yr_m_s": 18.17577139173412,
+    "inclination_drift_deg_per_year": 0.12850735435718216
+  },
+  "radiation": {
+    "peak_l_shell": 33.34450727245033,
+    "fraction_in_belts": 0.22720962517353077,
+    "annual_fluence_1mev_e_cm2": 10677878402446.066,
+    "fluence_5yr_1mev_e_cm2": 53389392012230.33,
+    "array_remaining_power_5yr": 0.9486442431951079,
+    "annual_dose_krad_si_estimate": 15.254112003494381,
+    "note": "Parametric AE-8-class belt model; engineering estimate, not AE9/AP9."
+  },
+  "magnetic": {
+    "igrf_available": true,
+    "n_samples": 109,
+    "mean_igrf_dipole_ratio": 0.9497416312711029,
+    "max_relative_difference": 0.3859594901502412
+  },
+  "comms": {
+    "itur_available": true,
+    "atmos_loss_5deg_db": 2.5741244290145273,
+    "atmos_loss_zenith_db": 0.21003806221547183,
+    "atmos_loss_contact_mean_db": 0.5170256517668668,
+    "atmos_loss_contact_max_db": 2.568706453802267,
+    "ccsds_scheme": "rs_conv_concatenated",
+    "ccsds_required_ebn0_db": 2.5,
+    "ccsds_coding_gain_db": 8.0,
+    "max_doppler_khz": 84.90392932330722,
+    "exceedance_pct": 1.0
+  }
+}

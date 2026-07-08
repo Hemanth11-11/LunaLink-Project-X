@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.cache/
+.venv/
+*.egg-info/
+.DS_Store
+*.output
+.streamlit/machine_id_v4
