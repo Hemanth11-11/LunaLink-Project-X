@@ -145,6 +145,10 @@ def _run_cached(output_step_s: float) -> dict[str, pd.DataFrame | dict]:
         perigee_radius_m=orbit.perigee_radius_m,
         apogee_radius_m=orbit.apogee_radius_m,
     )
+    validation_df = metrics_to_dataframe(results.validation_metrics)
+    # The "value" column mixes floats with flag strings ("False"/"none"); force it
+    # to string so Arrow caching/rendering never fails on the mixed dtype.
+    validation_df["value"] = validation_df["value"].astype(str)
     return {
         "config": config_dict,
         "environment": results.environment,
@@ -153,7 +157,7 @@ def _run_cached(output_step_s: float) -> dict[str, pd.DataFrame | dict]:
         "adcs": results.adcs,
         "ttc": results.ttc,
         "summaries": results.summaries,
-        "validation": metrics_to_dataframe(results.validation_metrics),
+        "validation": validation_df,
     }
 
 

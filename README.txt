@@ -13,9 +13,14 @@ Build reports:
 
 Launch GUI (interactive dashboard):
   .venv/bin/streamlit run code/main_gui.py
-  Opens on a mission Home screen with a live 3D globe (textured Earth/Moon) and
-  a subsystem status board, plus one tab per subsystem (Orbit, EPS, TCS, ADCS,
-  TT&C, Evidence). First load runs the 36 h mission once (~30 s) then caches it.
+  Dark space "mission control" theme (with a light toggle). Home screen with a
+  live 3D globe, a subsystem status board, one tab per subsystem (Orbit, EPS,
+  TCS, ADCS, TT&C, Evidence), and a Spacecraft tab with a SpaceX-style WebGL
+  explorer of the LunaLink bus (exploded view, part info). First load runs the
+  36 h mission once (~50 s, shown by an orbit animation) then caches it.
+
+Deploy to the web:
+  See DEPLOY.md (push to GitHub, then share.streamlit.io -> code/main_gui.py).
 
 Run verification:
   .venv/bin/ruff check code
