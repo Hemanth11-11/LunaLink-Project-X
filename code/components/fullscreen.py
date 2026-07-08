@@ -29,7 +29,7 @@ _HTML = """
     + '<path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>';
   btn.innerHTML = EXPAND;
   Object.assign(btn.style, {
-    position: "fixed", top: "14px", right: "16px", zIndex: "100000",
+    position: "fixed", top: "56px", right: "16px", zIndex: "100000",
     width: "36px", height: "36px", display: "flex", alignItems: "center",
     justifyContent: "center", borderRadius: "10px", cursor: "pointer",
     background: "rgba(9,14,26,0.72)", color: "#e7eefb",
@@ -42,18 +42,19 @@ _HTML = """
   btn.onmouseleave = function () {
     btn.style.background = "rgba(9,14,26,0.72)"; btn.style.color = "#e7eefb";
   };
-  btn.onclick = function () {
-    if (!doc.fullscreenElement) {
-      var el = doc.documentElement;
-      (el.requestFullscreen || el.webkitRequestFullscreen || function () {}).call(el);
-    } else {
-      (doc.exitFullscreen || doc.webkitExitFullscreen || function () {}).call(doc);
-    }
-  };
-  doc.addEventListener("fullscreenchange", function () {
-    btn.innerHTML = doc.fullscreenElement ? SHRINK : EXPAND;
-  });
+  // Inline handler runs in the PARENT realm (parent is the responsible document),
+  // so the Fullscreen API's permission check passes and there is no dead-realm
+  // closure after Streamlit reruns.
+  btn.setAttribute("onclick",
+    "var d=document,e=d.documentElement;"
+    + "if(!d.fullscreenElement){(e.requestFullscreen||e.webkitRequestFullscreen).call(e);"
+    + "this.dataset.fs='1';}"
+    + "else{(d.exitFullscreen||d.webkitExitFullscreen).call(d);this.dataset.fs='';}");
   doc.body.appendChild(btn);
+  doc.addEventListener("fullscreenchange", function () {
+    var b = doc.getElementById("ll-fs-btn");
+    if (b) b.innerHTML = doc.fullscreenElement ? SHRINK : EXPAND;
+  });
 })();
 </script>
 """

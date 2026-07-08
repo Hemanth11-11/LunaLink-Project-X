@@ -641,6 +641,7 @@ def _render_home(config, environment, summaries, validation, sample_stride) -> N
         st.dataframe(pd.DataFrame(PROJECT_SCOPE_ROWS), hide_index=True, use_container_width=True)
 
 
+@st.fragment
 def _render_orbit(config, environment, summaries, sample_stride) -> None:
     st.markdown('<div class="ll-section">3D orbit &amp; environment</div>', unsafe_allow_html=True)
     max_index = len(environment) - 1
@@ -697,6 +698,7 @@ def _render_orbit(config, environment, summaries, sample_stride) -> None:
         unsafe_allow_html=True)
 
 
+@st.fragment
 def _render_eps(output_step_s) -> None:
     st.markdown('<div class="ll-section">Electrical Power System</div>', unsafe_allow_html=True)
     controls, plots = st.columns([0.34, 0.66])
@@ -753,6 +755,7 @@ def _render_eps(output_step_s) -> None:
         unsafe_allow_html=True)
 
 
+@st.fragment
 def _render_tcs(output_step_s) -> None:
     st.markdown('<div class="ll-section">Thermal Control System</div>', unsafe_allow_html=True)
     controls, plots = st.columns([0.32, 0.68])
@@ -782,6 +785,7 @@ def _render_tcs(output_step_s) -> None:
         st.json(thermal_summary, expanded=False)
 
 
+@st.fragment
 def _render_adcs(config, output_step_s) -> None:
     st.markdown('<div class="ll-section">Attitude Determination &amp; Control</div>',
                 unsafe_allow_html=True)
@@ -856,6 +860,7 @@ def _render_adcs(config, output_step_s) -> None:
     )
 
 
+@st.fragment
 def _render_ttc(output_step_s) -> None:
     st.markdown('<div class="ll-section">Telemetry, Tracking &amp; Command</div>',
                 unsafe_allow_html=True)
@@ -923,6 +928,7 @@ def _render_ttc(output_step_s) -> None:
         unsafe_allow_html=True)
 
 
+@st.fragment
 def _render_spacecraft(summaries) -> None:
     st.markdown('<div class="ll-section">LunaLink spacecraft explorer</div>',
                 unsafe_allow_html=True)
