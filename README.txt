@@ -1,6 +1,11 @@
 LunaLink Engineering Simulator - Project X
 
-Clean install:
+QUICK START (single command - installs on first run, then launches the GUI):
+  Linux / macOS:   bash run.sh
+  Windows:         run.bat
+  (add "sim" to run the headless simulation instead, e.g. `bash run.sh sim`)
+
+Manual clean install (equivalent):
   python3.13 -m venv .venv
   .venv/bin/pip install -r code/requirements.txt
 

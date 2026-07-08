@@ -17,6 +17,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 import viz3d
+from components.fullscreen import fullscreen_button
 from components.spacecraft3d import spacecraft_explorer
 from lunalink.adcs import AdcsConfig, run_adcs, run_sun_pointing
 from lunalink.comms_atmosphere import slant_attenuation_db
@@ -445,10 +446,15 @@ def _install_style(theme: str = "dark") -> None:
             radial-gradient(1200px 700px at 78% -8%, var(--hero2) 0%, transparent 55%),
             radial-gradient(900px 600px at 8% 108%, rgba(56,189,248,0.10) 0%, transparent 55%),
             var(--bg1);}}
-        [data-testid="stHeader"] {{background: transparent;}}
+        /* Transparent header must not swallow clicks over the tab bar below it;
+           re-enable its own toolbar so the menu stays usable. */
+        [data-testid="stHeader"] {{background: transparent; pointer-events: none;}}
+        [data-testid="stToolbar"], [data-testid="stHeader"] button {{pointer-events: auto;}}
         [data-testid="stSidebar"] {{background: var(--bg2);
             border-right: 1px solid var(--edge);}}
-        .block-container {{padding-top: 1.3rem; padding-bottom: 2rem; max-width: 1380px;}}
+        .block-container {{padding-top: 2.4rem; padding-bottom: 2rem; max-width: 1380px;}}
+        .stTabs [data-baseweb="tab-list"] {{position: relative; z-index: 3;}}
+        .stTabs button[data-baseweb="tab"] {{position: relative; z-index: 3;}}
         #MainMenu, footer {{visibility: hidden;}}
         h1,h2,h3,h4,p,label,span,li {{color: var(--fg);}}
         .ll-hero {{
@@ -947,12 +953,16 @@ def _render_spacecraft(summaries) -> None:
 
 def _render_evidence(config, summaries, validation) -> None:
     st.markdown('<div class="ll-section">Validation &amp; evidence</div>', unsafe_allow_html=True)
-    def _row_style(row):
-        color = {"pass": "#dcfce7", "warn": "#fef3c7", "fail": "#fee2e2"}.get(row["status"], "")
-        return [f"background-color: {color}"] * len(row)
+
+    def _status_style(value):
+        color = {"pass": "#16a34a", "warn": "#d97706", "fail": "#dc2626"}.get(value, "")
+        return f"color: {color}; font-weight: 700" if color else ""
+
     view = validation[["name", "status", "severity", "value", "criterion", "source_module"]]
-    st.dataframe(view.style.apply(_row_style, axis=1), use_container_width=True,
-                 hide_index=True)
+    # Colour only the status text; leave cell backgrounds to the theme so the
+    # table is white-on-dark (dark mode) / black-on-white (light mode).
+    styled = view.style.map(_status_style, subset=["status"])
+    st.dataframe(styled, use_container_width=True, hide_index=True)
     st.markdown(
         '<div class="ll-note">This dashboard supports preliminary engineering trade studies and '
         'the Project X submission. Flight-qualified use requires independent GMAT/Orekit '
@@ -982,6 +992,7 @@ def main() -> None:
                                     label_visibility="collapsed")
     CURRENT_THEME = "light" if "Light" in theme_choice else "dark"
     _install_style(CURRENT_THEME)
+    fullscreen_button()
 
     st.sidebar.header("Simulation controls")
     output_step_s = st.sidebar.select_slider(
