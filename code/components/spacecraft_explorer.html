@@ -1,11 +1,12 @@
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  #ll-wrap { position:relative; width:100%; height:100%; overflow:hidden;
+  html, body { width:100%; height:100%; overflow:hidden; }
+  #ll-wrap { position:relative; width:100%; height:100vh; overflow:hidden;
     font-family: -apple-system, Segoe UI, Roboto, sans-serif; }
   #ll-canvas { display:block; width:100%; height:100%; }
   .ll-panel { position:absolute; backdrop-filter: blur(8px);
     border:1px solid var(--edge); border-radius:12px; padding:12px 14px; }
-  #ll-controls { top:14px; left:14px; width:210px; background:var(--panel); color:var(--fg); }
+  #ll-controls { top:14px; left:14px; width:216px; background:var(--panel); color:var(--fg); }
   #ll-controls h3 { font-size:12px; letter-spacing:.08em; text-transform:uppercase;
     color:var(--muted); margin-bottom:8px; }
   #ll-explode-label { font-size:12px; color:var(--fg); display:flex;
@@ -17,21 +18,26 @@
   .ll-chip.on { background:#38bdf8; color:#04121f; border-color:#38bdf8; }
   .ll-toggle { display:flex; align-items:center; gap:7px; font-size:12px;
     color:var(--fg); margin-top:6px; cursor:pointer; }
-  #ll-info { bottom:14px; left:14px; width:250px; background:var(--panel); color:var(--fg);
+  #ll-info { bottom:14px; left:14px; width:252px; background:var(--panel); color:var(--fg);
     display:none; }
   #ll-info .name { font-size:15px; font-weight:700; margin-bottom:2px; }
   #ll-info .sys { font-size:11px; letter-spacing:.06em; text-transform:uppercase; }
   #ll-info .row { font-size:12px; color:var(--muted); margin-top:6px; }
   #ll-info .metric { font-size:20px; font-weight:700; color:#38bdf8; margin-top:6px; }
-  #ll-hint { bottom:14px; right:14px; font-size:11px; color:var(--muted);
-    background:var(--panel); }
+  #ll-hint { bottom:14px; right:14px; font-size:11px; color:var(--muted); background:var(--panel); }
   .ll-btnrow { display:flex; gap:6px; margin-top:10px; }
   .ll-btn { flex:1; font-size:11px; text-align:center; padding:5px; border-radius:8px;
     border:1px solid var(--edge); color:var(--fg); cursor:pointer; }
   .ll-btn:hover { background:#38bdf8; color:#04121f; }
+  .ll-label { position:absolute; transform:translate(-50%,-50%); pointer-events:none;
+    font-size:10.5px; padding:2px 7px; border-radius:6px; white-space:nowrap;
+    background:rgba(6,10,20,0.78); color:#e7eefb; border:1px solid var(--edge);
+    opacity:0; transition:opacity .2s; }
+  .ll-label b { color:#fff; }
 </style>
 <div id="ll-wrap">
   <canvas id="ll-canvas"></canvas>
+  <div id="ll-labels"></div>
   <div id="ll-controls" class="ll-panel">
     <h3>LunaLink Explorer</h3>
     <div id="ll-explode-label"><span>Exploded view</span><span id="ll-explode-val">0%</span></div>
@@ -50,169 +56,205 @@
     <div class="row" id="ll-info-mass"></div>
     <div class="metric" id="ll-info-metric"></div>
   </div>
-  <div id="ll-hint" class="ll-panel">drag rotate · scroll zoom · click a part</div>
+  <div id="ll-hint" class="ll-panel">drag rotate · scroll zoom · click a part · slide to explode</div>
 </div>
 <script>__THREE__</script>
 <script>__ORBIT__</script>
 <script>
 const CFG = __DATA__;
 const DARK = CFG.theme !== "light";
-const SYS_COLOR = { "Structure":0xc9972e, "TCS":0xe8eef5, "EPS":0xf4b740,
+const SYS_COLOR = { "Structure":0xd9a441, "TCS":0xe8eef5, "EPS":0xf4b740,
   "TT&C":0x38bdf8, "ADCS":0x34d399, "Propulsion":0xf472b6 };
-document.documentElement.style.setProperty("--panel", DARK ? "rgba(9,14,26,0.72)" : "rgba(255,255,255,0.82)");
-document.documentElement.style.setProperty("--edge", DARK ? "rgba(120,150,190,0.25)" : "rgba(20,40,70,0.15)");
-document.documentElement.style.setProperty("--fg", DARK ? "#e6eefb" : "#0f1b2d");
-document.documentElement.style.setProperty("--muted", DARK ? "#93a4bd" : "#5a6b82");
+const R=document.documentElement.style;
+R.setProperty("--panel", DARK?"rgba(9,14,26,0.74)":"rgba(255,255,255,0.84)");
+R.setProperty("--edge", DARK?"rgba(120,150,190,0.25)":"rgba(20,40,70,0.15)");
+R.setProperty("--fg", DARK?"#e7eefb":"#0f1b2d");
+R.setProperty("--muted", DARK?"#93a4bd":"#5a6b82");
 
-const wrap = document.getElementById("ll-wrap");
-const canvas = document.getElementById("ll-canvas");
-const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(DARK ? 0x05070f : 0xeef3fa);
-const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 200);
-camera.position.set(6.6, 3.9, 7.4);
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true; controls.dampingFactor = 0.08;
+const wrap=document.getElementById("ll-wrap"), canvas=document.getElementById("ll-canvas");
+const renderer=new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(DARK?0x05070f:0xeef3fa);
+const camera=new THREE.PerspectiveCamera(45,1,0.1,300);
+camera.position.set(6.8,4.0,7.6);
+const controls=new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping=true; controls.dampingFactor=0.08;
 
-scene.add(new THREE.AmbientLight(0xffffff, DARK ? 0.62 : 0.85));
-scene.add(new THREE.HemisphereLight(0xbcd4ff, 0x202430, 0.75));
-const key = new THREE.DirectionalLight(0xfff4e0, 1.7); key.position.set(6,7,5); scene.add(key);
-const fill = new THREE.DirectionalLight(0xffffff, 0.6); fill.position.set(-4,2,6); scene.add(fill);
-const rim = new THREE.DirectionalLight(0x88bbff, 0.55); rim.position.set(-6,-3,-5); scene.add(rim);
+scene.add(new THREE.AmbientLight(0xffffff, DARK?0.6:0.85));
+scene.add(new THREE.HemisphereLight(0xbcd4ff,0x202430,0.7));
+const key=new THREE.DirectionalLight(0xfff4e0,1.7); key.position.set(7,8,5); scene.add(key);
+const fill=new THREE.DirectionalLight(0xffffff,0.55); fill.position.set(-5,2,6); scene.add(fill);
+const rim=new THREE.DirectionalLight(0x88bbff,0.5); rim.position.set(-6,-3,-6); scene.add(rim);
 
-if (DARK) {
-  const N = 500, sg = new THREE.BufferGeometry(), pos = new Float32Array(N*3);
-  for (let i=0;i<N;i++){ const r=60, u=Math.random()*2-1, t=Math.random()*6.283;
-    const s=Math.sqrt(1-u*u); pos[i*3]=r*s*Math.cos(t); pos[i*3+1]=r*u; pos[i*3+2]=r*s*Math.sin(t); }
-  sg.setAttribute("position", new THREE.BufferAttribute(pos,3));
-  scene.add(new THREE.Points(sg, new THREE.PointsMaterial({color:0xdbe4ff, size:0.18, opacity:0.7, transparent:true})));
+if(DARK){ const N=520,g=new THREE.BufferGeometry(),p=new Float32Array(N*3);
+  for(let i=0;i<N;i++){const r=80,u=Math.random()*2-1,t=Math.random()*6.283,s=Math.sqrt(1-u*u);
+    p[i*3]=r*s*Math.cos(t);p[i*3+1]=r*u;p[i*3+2]=r*s*Math.sin(t);}
+  g.setAttribute("position",new THREE.BufferAttribute(p,3));
+  scene.add(new THREE.Points(g,new THREE.PointsMaterial({color:0xdbe4ff,size:0.22,opacity:0.7,transparent:true})));}
+
+function panelTex(){const c=document.createElement("canvas");c.width=c.height=256;const x=c.getContext("2d");
+  x.fillStyle="#0f2a5c";x.fillRect(0,0,256,256);x.strokeStyle="#2f57a6";x.lineWidth=3;
+  for(let i=0;i<=8;i++){x.beginPath();x.moveTo(i*32,0);x.lineTo(i*32,256);x.stroke();
+    x.beginPath();x.moveTo(0,i*32);x.lineTo(256,i*32);x.stroke();}
+  const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(3,2);return t;}
+const PTEX=panelTex();
+function dishGeo(){const pts=[];for(let i=0;i<=14;i++){const r=i/14*0.62;pts.push(new THREE.Vector2(r,0.24*r*r/0.38));}
+  return new THREE.LatheGeometry(pts,44);}
+
+const group=new THREE.Group(); scene.add(group);
+const parts=[];
+function mat(opts){return new THREE.MeshStandardMaterial(opts);}
+function add(mesh,meta){mesh.userData=Object.assign({base:mesh.position.toArray(),ex:[0,0,0]},meta);
+  group.add(mesh); parts.push(mesh); return mesh;}
+
+// ---- Central bus (gold MLI) + payload deck ----
+const busMat=mat({color:0xd9a441,metalness:0.55,roughness:0.34,emissive:0x241703,emissiveIntensity:0.5});
+add(new THREE.Mesh(new THREE.BoxGeometry(2.0,1.0,1.5),busMat),
+  {id:"bus",name:"MLI-wrapped bus",sys:"Structure",mass:"~180 kg",
+   fn:"Primary structure with gold multi-layer insulation",label:1});
+const deck=new THREE.Mesh(new THREE.BoxGeometry(1.7,0.09,1.2),mat({color:0xb8862a,metalness:0.5,roughness:0.5}));
+deck.position.set(0,0.05,0); add(deck,{id:"deck",name:"Payload deck",sys:"Structure",mass:"~25 kg",
+   fn:"Internal equipment mounting deck",ex:[0,2.6,0]});
+
+// ---- Solar wings: 2 x 3 segments on yokes, extending +/-X ----
+const YOKE=mat({color:0x8a8f99,metalness:0.6,roughness:0.4});
+for(const side of [-1,1]){
+  const yoke=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,0.55,12),YOKE);
+  yoke.rotation.z=Math.PI/2; yoke.position.set(side*1.28,0,0);
+  add(yoke,{id:"yoke"+side,name:"Array yoke",sys:"Structure",mass:"~4 kg",
+    fn:"Deployable solar-array support boom",ex:[side*1.2,0,0]});
+  for(let s=0;s<3;s++){
+    const px=side*(1.55+0.02+s*0.98);
+    const seg=new THREE.Mesh(new THREE.BoxGeometry(0.94,0.05,1.55),
+      mat({map:PTEX,metalness:0.15,roughness:0.5,side:THREE.DoubleSide}));
+    seg.position.set(px,0,0);
+    add(seg,{id:"array"+side+"_"+s,name:"Solar array ("+(side>0?"+":"−")+"wing seg "+(s+1)+")",
+      sys:"EPS",mass:"~12 kg",fn:"Deployable triple-junction GaAs cells",
+      ex:[side*(0.7+s*0.8),0,0],label:(s===1?1:0)});
+  }
 }
 
-function panelTexture(){
-  const c=document.createElement("canvas"); c.width=c.height=256; const x=c.getContext("2d");
-  x.fillStyle="#12306e"; x.fillRect(0,0,256,256); x.strokeStyle="#2f57a6"; x.lineWidth=3;
-  for(let i=0;i<=8;i++){ x.beginPath(); x.moveTo(i*32,0); x.lineTo(i*32,256); x.stroke();
-    x.beginPath(); x.moveTo(0,i*32); x.lineTo(256,i*32); x.stroke(); }
-  const t=new THREE.CanvasTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(2,3); return t;
-}
-const PANEL_TEX = panelTexture();
+// ---- High-gain dish on top (+Y), pointing up ----
+const mast=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.06,0.5,12),YOKE);
+mast.position.set(0,0.75,0); add(mast,{id:"mast",name:"HGA mast",sys:"Structure",mass:"~3 kg",
+  fn:"High-gain antenna support mast",ex:[0,2.4,0]});
+const dish=new THREE.Mesh(dishGeo(),mat({color:0xdfe4ea,metalness:0.6,roughness:0.28,side:THREE.DoubleSide}));
+dish.position.set(0,1.05,0); dish.rotation.x=0;
+add(dish,{id:"dish",name:"High-gain antenna",sys:"TT&C",mass:"~9 kg",
+  fn:"X-band Earth downlink, >=100 Mbps",ex:[0,3.0,0],label:1});
+const feed=new THREE.Mesh(new THREE.ConeGeometry(0.07,0.22,14),mat({color:0xcfd6df,metalness:0.7,roughness:0.3}));
+feed.position.set(0,1.28,0); feed.rotation.x=Math.PI;
+add(feed,{id:"feed",name:"HGA feed horn",sys:"TT&C",mass:"~1 kg",fn:"Dish feed at the focus",ex:[0,3.5,0]});
 
-function dishGeometry(){
-  const pts=[]; for(let i=0;i<=12;i++){ const r=i/12*0.62; pts.push(new THREE.Vector2(r, 0.22*r*r/0.38)); }
-  return new THREE.LatheGeometry(pts, 40);
+// ---- UHF Moon-relay antennas (nadir, -Y) ----
+for(const side of [-1,1]){
+  const uhf=new THREE.Mesh(new THREE.CylinderGeometry(0.028,0.028,0.6,12),mat({color:0xa3e635,metalness:0.4,roughness:0.5}));
+  uhf.position.set(side*0.45,-0.7,0.3);
+  add(uhf,{id:"uhf"+side,name:"UHF relay antenna",sys:"TT&C",mass:"~1 kg",
+    fn:"Moon uplink UHF 400-512 MHz",ex:[side*1.4,-1.8,0.8],label:(side>0?1:0)});
 }
 
-// [id, name, subsystem, mass, function, geometry, size(x,y,z), pos, explodeVec]
-const PARTS = [
-  ["bus","MLI-wrapped bus","Structure","~180 kg","Primary structure + gold multi-layer insulation","box",[2.0,1.0,1.5],[0,0,0],[0,0,0]],
-  ["deck","Payload deck","Structure","~25 kg","Internal equipment mounting deck","box",[1.7,0.08,1.2],[0,0.15,0],[0,2.2,0]],
-  ["array_p","Solar array +wing","EPS","~35 kg","Deployable triple-junction GaAs array","panel",[1.9,2.6,0.04],[0,1.85,0],[0,2.2,0]],
-  ["array_n","Solar array -wing","EPS","~35 kg","Deployable triple-junction GaAs array","panel",[1.9,2.6,0.04],[0,-1.85,0],[0,-2.2,0]],
-  ["tank","Propellant tank","Propulsion","~60 kg wet","Hydrazine / station-keeping propellant","sphere",[0.42,0.42,0.42],[0,-0.15,0],[0,-2.6,0]],
-  ["wheels","Reaction-wheel cluster","ADCS","~12 kg","4-wheel pyramid, momentum storage","wheels",[0,0,0],[0.35,-0.1,0],[1.4,-1.2,0]],
-  ["dish","High-gain antenna","TT&C","~9 kg","X-band Earth downlink >=100 Mbps","dish",[0,0,0],[1.35,0.1,0],[3.2,0.2,0]],
-  ["feed","HGA feed + boom","TT&C","~2 kg","Dish feed on deployable boom","cyl",[0.05,0.5,0.05],[1.05,0.1,0],[2.6,0.2,0]],
-  ["uhf1","UHF antenna A","TT&C","~1 kg","Moon relay UHF 400-512 MHz","cyl",[0.03,0.55,0.03],[-1.05,0.35,0.5],[-2.6,0.6,1.2]],
-  ["uhf2","UHF antenna B","TT&C","~1 kg","Moon relay UHF 400-512 MHz","cyl",[0.03,0.55,0.03],[-1.05,0.35,-0.5],[-2.6,0.6,-1.2]],
-  ["radiator","Radiator panel","TCS","~8 kg","OSR/FEP heat-rejection surface","box",[0.05,0.8,1.2],[0,0,0.82],[0,0,2.6]],
-  ["startracker","Star tracker","ADCS","~3 kg","Attitude determination optical head","box",[0.16,0.16,0.22],[0.7,0.5,0.62],[1.8,1.4,1.6]],
-  ["thruster1","Thruster +","ADCS","~1 kg","Reaction-control / SK thruster","cone",[0.09,0.16,0.09],[-1.02,0.42,0.6],[-2.4,1.0,1.4]],
-  ["thruster2","Thruster -","ADCS","~1 kg","Reaction-control / SK thruster","cone",[0.09,0.16,0.09],[-1.02,-0.42,-0.6],[-2.4,-1.0,-1.4]],
-];
+// ---- TCS radiator (side face +Z) ----
+const rad=new THREE.Mesh(new THREE.BoxGeometry(1.4,0.85,0.05),mat({color:0xeef2f7,metalness:0.2,roughness:0.6}));
+rad.position.set(0,0,0.8); add(rad,{id:"radiator",name:"Radiator panel",sys:"TCS",mass:"~8 kg",
+  fn:"OSR/FEP heat-rejection surface",ex:[0,0,2.6],label:1});
 
-const group = new THREE.Group(); scene.add(group);
-const meshes = [];
-for (const p of PARTS){
-  const [id,name,sys,mass,fn,geo,size,pos,ex] = p;
-  let g, mat;
-  const col = SYS_COLOR[sys] || 0x9aa7b8;
-  if (geo==="box"){ g=new THREE.BoxGeometry(size[0],size[1],size[2]); }
-  else if (geo==="panel"){ g=new THREE.BoxGeometry(size[0],size[1],size[2]); }
-  else if (geo==="sphere"){ g=new THREE.SphereGeometry(size[0],28,20); }
-  else if (geo==="cyl"){ g=new THREE.CylinderGeometry(size[0],size[0],size[1],16); }
-  else if (geo==="cone"){ g=new THREE.ConeGeometry(size[0],size[1],16); }
-  else if (geo==="dish"){ g=dishGeometry(); }
-  else if (geo==="wheels"){ g=new THREE.BoxGeometry(0.5,0.25,0.5); }
-  if (geo==="panel"){ mat=new THREE.MeshStandardMaterial({map:PANEL_TEX, metalness:0.1, roughness:0.5, side:THREE.DoubleSide}); }
-  else if (id==="bus"){ mat=new THREE.MeshStandardMaterial({color:0xe3a83a, metalness:0.5, roughness:0.38, emissive:0x2a1c05, emissiveIntensity:0.55}); }
-  else if (id==="deck"){ mat=new THREE.MeshStandardMaterial({color:0xb8862a, metalness:0.5, roughness:0.45}); }
-  else if (geo==="dish"){ mat=new THREE.MeshStandardMaterial({color:0xd7dee8, metalness:0.7, roughness:0.25, side:THREE.DoubleSide}); }
-  else { mat=new THREE.MeshStandardMaterial({color:col, metalness:0.5, roughness:0.45}); }
-  const m=new THREE.Mesh(g,mat);
-  m.position.set(pos[0],pos[1],pos[2]);
-  if (geo==="dish"){ m.rotation.z=-Math.PI/2; }
-  if (geo==="cone"){ m.rotation.z=Math.PI/2; }
-  m.userData={id,name,sys,mass,fn, base:pos.slice(), ex, baseColor:mat.color? mat.color.clone():null,
-    baseEmissive: mat.emissive.clone()};
-  group.add(m); meshes.push(m);
+// ---- Propulsion: propellant tank + thrusters ----
+const tank=new THREE.Mesh(new THREE.SphereGeometry(0.34,28,20),mat({color:0xb8bcc4,metalness:0.75,roughness:0.3}));
+tank.position.set(0,-0.15,-0.2); add(tank,{id:"tank",name:"Propellant tank",sys:"Propulsion",mass:"~60 kg wet",
+  fn:"Hydrazine for station-keeping",ex:[0,-2.6,-0.4],label:1});
+for(const sx of [-1,1]) for(const sz of [-1,1]){
+  const th=new THREE.Mesh(new THREE.ConeGeometry(0.08,0.16,14),mat({color:0x2a2f38,metalness:0.6,roughness:0.4}));
+  th.position.set(sx*0.9,-0.55,sz*0.6); th.rotation.x=Math.PI;
+  add(th,{id:"thr"+sx+sz,name:"RCS thruster",sys:"Propulsion",mass:"~0.8 kg",
+    fn:"Reaction-control / SK thruster",ex:[sx*1.6,-1.4,sz*1.0]});
 }
-// centre the assembly vertically
-group.position.y = -0.1;
+
+// ---- ADCS: reaction wheels, star tracker, sun sensor ----
+const wheels=new THREE.Mesh(new THREE.BoxGeometry(0.55,0.28,0.55),mat({color:0x3a4150,metalness:0.5,roughness:0.4}));
+wheels.position.set(0.4,-0.1,0.0); add(wheels,{id:"wheels",name:"Reaction-wheel cluster",sys:"ADCS",mass:"~12 kg",
+  fn:"4-wheel pyramid, momentum storage",ex:[1.6,-1.3,0],label:1});
+const st=new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.12,0.26,16),mat({color:0x1f2937,metalness:0.4,roughness:0.5}));
+st.position.set(0.7,0.55,0.55); st.rotation.x=0.5;
+add(st,{id:"startracker",name:"Star tracker",sys:"ADCS",mass:"~3 kg",
+  fn:"Optical attitude determination",ex:[1.8,1.5,1.5],label:1});
+const ss=new THREE.Mesh(new THREE.BoxGeometry(0.12,0.05,0.12),mat({color:0x111827,metalness:0.3,roughness:0.6}));
+ss.position.set(-0.7,0.55,0.55); add(ss,{id:"sunsensor",name:"Sun sensor",sys:"ADCS",mass:"~0.4 kg",
+  fn:"Coarse Sun acquisition",ex:[-1.7,1.5,1.5]});
+
+group.position.y=-0.1;
+
+// ---- Persistent subsystem labels (shown when exploded) ----
+const labelWrap=document.getElementById("ll-labels"); const labels=[];
+for(const m of parts){ if(m.userData.label){
+  const el=document.createElement("div"); el.className="ll-label";
+  const c="#"+(SYS_COLOR[m.userData.sys]||0x9aa7b8).toString(16).padStart(6,"0");
+  el.innerHTML='<b style="color:'+c+'">'+m.userData.sys+'</b> · '+m.userData.name;
+  labelWrap.appendChild(el); labels.push({el,mesh:m}); } }
 
 // ---- Interactivity ----
-const raycaster=new THREE.Raycaster(), mouse=new THREE.Vector2();
+const ray=new THREE.Raycaster(), mouse=new THREE.Vector2();
 let hovered=null, selected=null, autospin=false, explode=0, activeSys=null;
 const infoBox=document.getElementById("ll-info");
-
 const slider=document.getElementById("ll-explode");
-slider.addEventListener("input", ()=>{ explode=slider.value/100;
-  document.getElementById("ll-explode-val").textContent=slider.value+"%"; applyExplode(); });
-function applyExplode(){ for(const m of meshes){ const b=m.userData.base, e=m.userData.ex;
-  m.position.set(b[0]+e[0]*explode, b[1]+e[1]*explode, b[2]+e[2]*explode); } }
+slider.addEventListener("input",()=>{explode=slider.value/100;
+  document.getElementById("ll-explode-val").textContent=slider.value+"%"; applyExplode();});
+function applyExplode(){for(const m of parts){const b=m.userData.base,e=m.userData.ex;
+  m.position.set(b[0]+e[0]*explode,b[1]+e[1]*explode,b[2]+e[2]*explode);}}
+document.getElementById("ll-spin").addEventListener("click",()=>{autospin=!autospin;});
+document.getElementById("ll-reset").addEventListener("click",()=>{
+  camera.position.set(6.8,4.0,7.6); controls.target.set(0,0,0);});
 
-document.getElementById("ll-spin").addEventListener("click", ()=>{ autospin=!autospin; });
-document.getElementById("ll-reset").addEventListener("click", ()=>{
-  camera.position.set(6.6,3.9,7.4); controls.target.set(0,0,0); });
-
-// subsystem highlight chips
 const sysrow=document.getElementById("ll-sysrow");
-Object.keys(SYS_COLOR).forEach(sys=>{
-  const c=document.createElement("div"); c.className="ll-chip"; c.textContent=sys;
+Object.keys(SYS_COLOR).forEach(sys=>{const c=document.createElement("div");c.className="ll-chip";c.textContent=sys;
   c.style.borderColor="#"+SYS_COLOR[sys].toString(16).padStart(6,"0");
-  c.addEventListener("click", ()=>{ activeSys = activeSys===sys? null: sys;
+  c.addEventListener("click",()=>{activeSys=activeSys===sys?null:sys;
     document.querySelectorAll(".ll-chip").forEach(x=>x.classList.remove("on"));
-    if(activeSys) c.classList.add("on"); applyHighlight(); });
-  sysrow.appendChild(c);
-});
-function applyHighlight(){ for(const m of meshes){ const on = !activeSys || m.userData.sys===activeSys;
-  m.material.opacity = on?1:0.14; m.material.transparent = !on;
-  m.material.emissive.setHex(on&&activeSys? 0x333333:0x000000); } }
+    if(activeSys)c.classList.add("on"); applyHighlight();}); sysrow.appendChild(c);});
+function applyHighlight(){for(const m of parts){const on=!activeSys||m.userData.sys===activeSys;
+  m.material.opacity=on?1:0.12; m.material.transparent=!on;
+  if(m!==selected)m.material.emissive.setHex(on&&activeSys?0x333333:(m.userData.id==="bus"?0x241703:0x000000));}}
 
-// visibility toggles
 const tog=document.getElementById("ll-toggles");
-[["EPS","Solar arrays"],["TT&C","Antennas"],["ADCS","ADCS units"]].forEach(([sys,label])=>{
-  const row=document.createElement("label"); row.className="ll-toggle";
-  const cb=document.createElement("input"); cb.type="checkbox"; cb.checked=true;
-  cb.addEventListener("change",()=>{ for(const m of meshes) if(m.userData.sys===sys) m.visible=cb.checked; });
-  row.appendChild(cb); row.appendChild(document.createTextNode(label)); tog.appendChild(row);
-});
+[["EPS","Solar arrays"],["TT&C","Antennas"],["ADCS","ADCS units"],["Propulsion","Propulsion"]].forEach(([sys,label])=>{
+  const row=document.createElement("label");row.className="ll-toggle";
+  const cb=document.createElement("input");cb.type="checkbox";cb.checked=true;
+  cb.addEventListener("change",()=>{for(const m of parts)if(m.userData.sys===sys)m.visible=cb.checked;});
+  row.appendChild(cb);row.appendChild(document.createTextNode(label));tog.appendChild(row);});
 
-function setMouse(ev){ const r=canvas.getBoundingClientRect();
-  mouse.x=((ev.clientX-r.left)/r.width)*2-1; mouse.y=-((ev.clientY-r.top)/r.height)*2+1; }
-canvas.addEventListener("mousemove", ev=>{ setMouse(ev);
-  raycaster.setFromCamera(mouse,camera); const hit=raycaster.intersectObjects(meshes.filter(m=>m.visible));
-  if(hovered && hovered!==selected) hovered.material.emissive.setHex(0x000000);
-  if(hit.length){ hovered=hit[0].object; if(hovered!==selected) hovered.material.emissive.setHex(0x224466);
-    canvas.style.cursor="pointer"; } else { hovered=null; canvas.style.cursor="default"; } });
-canvas.addEventListener("click", ev=>{ setMouse(ev); raycaster.setFromCamera(mouse,camera);
-  const hit=raycaster.intersectObjects(meshes.filter(m=>m.visible));
-  if(selected) selected.material.emissive.setHex(0x000000);
-  if(hit.length){ selected=hit[0].object; selected.material.emissive.setHex(0x2a5a8a); showInfo(selected.userData); }
-  else { selected=null; infoBox.style.display="none"; } });
-
-function showInfo(d){ infoBox.style.display="block";
+function setMouse(ev){const r=canvas.getBoundingClientRect();
+  mouse.x=((ev.clientX-r.left)/r.width)*2-1; mouse.y=-((ev.clientY-r.top)/r.height)*2+1;}
+canvas.addEventListener("mousemove",ev=>{setMouse(ev);ray.setFromCamera(mouse,camera);
+  const hit=ray.intersectObjects(parts.filter(m=>m.visible));
+  if(hovered&&hovered!==selected)hovered.material.emissive.setHex(hovered.userData.id==="bus"?0x241703:0x000000);
+  if(hit.length){hovered=hit[0].object;if(hovered!==selected)hovered.material.emissive.setHex(0x224466);
+    canvas.style.cursor="pointer";}else{hovered=null;canvas.style.cursor="default";}});
+canvas.addEventListener("click",ev=>{setMouse(ev);ray.setFromCamera(mouse,camera);
+  const hit=ray.intersectObjects(parts.filter(m=>m.visible));
+  if(selected)selected.material.emissive.setHex(selected.userData.id==="bus"?0x241703:0x000000);
+  if(hit.length){selected=hit[0].object;selected.material.emissive.setHex(0x2a5a8a);showInfo(selected.userData);}
+  else{selected=null;infoBox.style.display="none";}});
+function showInfo(d){infoBox.style.display="block";
   document.getElementById("ll-info-name").textContent=d.name;
-  const sysEl=document.getElementById("ll-info-sys"); sysEl.textContent=d.sys;
-  sysEl.style.color="#"+(SYS_COLOR[d.sys]||0x9aa7b8).toString(16).padStart(6,"0");
+  const s=document.getElementById("ll-info-sys");s.textContent=d.sys;
+  s.style.color="#"+(SYS_COLOR[d.sys]||0x9aa7b8).toString(16).padStart(6,"0");
   document.getElementById("ll-info-fn").textContent=d.fn;
   document.getElementById("ll-info-mass").textContent="Mass estimate: "+d.mass;
-  const met=CFG.metrics[d.sys]; const mEl=document.getElementById("ll-info-metric");
-  mEl.textContent = met? met : ""; mEl.style.display = met? "block":"none"; }
+  const met=CFG.metrics[d.sys],m=document.getElementById("ll-info-metric");
+  m.textContent=met||""; m.style.display=met?"block":"none";}
 
-function resize(){ const w=wrap.clientWidth, h=wrap.clientHeight;
-  renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
-window.addEventListener("resize", resize); resize();
-(function loop(){ requestAnimationFrame(loop); if(autospin) group.rotation.y+=0.004;
-  controls.update(); renderer.render(scene,camera); })();
+const _v=new THREE.Vector3();
+function updateLabels(){const show=explode>0.12; const r=canvas.getBoundingClientRect();
+  for(const L of labels){ if(!show||!L.mesh.visible){L.el.style.opacity=0;continue;}
+    L.mesh.getWorldPosition(_v); _v.project(camera);
+    if(_v.z>1){L.el.style.opacity=0;continue;}
+    L.el.style.left=((_v.x*0.5+0.5)*r.width)+"px";
+    L.el.style.top=((-_v.y*0.5+0.5)*r.height)+"px"; L.el.style.opacity=0.95;}}
+
+function resize(){const w=wrap.clientWidth,h=wrap.clientHeight;
+  renderer.setSize(w,h,false);camera.aspect=w/h||1;camera.updateProjectionMatrix();}
+window.addEventListener("resize",resize); resize();
+(function loop(){requestAnimationFrame(loop); if(autospin)group.rotation.y+=0.004;
+  controls.update(); renderer.render(scene,camera); updateLabels();})();
 </script>
